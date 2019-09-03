@@ -1,0 +1,109 @@
+#include<iostream>
+#include<cstring>
+#include<cstdio>
+using namespace std;
+#define N 2550
+#define int long long
+
+int inp(){
+	int Ans;char C;bool O=false;
+	while((C=getchar())<'0'||C>'9')if(C=='-')O=true;Ans=C-'0';
+	while((C=getchar())>='0'&&C<='9')Ans=(Ans<<3)+(Ans<<1)+C-48;
+	return O==true?-Ans:Ans;
+}
+
+struct Num{
+	int num[N],len;
+	void init(){
+		for(int i=0;i<=N;i++)
+			num[i]=0;
+		len=0;
+	}
+	void print(){
+		for(int i=len;i>=1;i--)
+			cout<<num[i];
+	}
+	void get_num(){
+		char C[N];
+		scanf("%s",C);
+		len=strlen(C);
+		for(int i=1;i<=len;i++)
+			num[i]=C[len-i]-48;
+	}
+	bool operator < (Num B){
+		if(len==B.len)
+		{
+			for(int i=len;i>=1;i--)
+				if(num[i]!=B.num[i])return num[i]<B.num[i];
+		}
+		return len<B.len;
+	}
+	bool operator == (Num B){
+		if(len==B.len)
+		{
+			for(int i=1;i<=len;i++)
+				if(num[i]!=B.num[i])return 0;
+			return 1;
+		}
+		return 0;
+	}
+	Num operator + (Num B){
+		Num C;C.init();C.len=max(len,B.len);
+		for(int i=1;i<=C.len;i++)
+		{
+			C.num[i]+=num[i]+B.num[i];
+			if(C.num[i]>=10)
+			{
+				C.num[i+1]++;
+				if(i+1>C.len)C.len++;
+				C.num[i]-=10;
+			}
+		}
+		return C;
+	} 
+	Num operator * (Num B){
+		Num C;C.init();C.len=len+B.len;
+		for(int i=1;i<=len;i++)
+		{
+			for(int j=1;j<=B.len;j++)
+			{
+				C.num[i+j-1]+=num[i]*B.num[j];
+				if(C.num[i+j-1]>=10)
+				{
+					C.num[i+j]+=(C.num[i+j-1]/10);
+					C.num[i+j-1]%=10;
+				}
+			}
+		}
+		while(C.num[C.len]==0&&C.len!=1)C.len--;
+		return C;
+	}	
+	Num operator / (int B){
+		Num C,D;C.init(),D.init();
+		int now=0;
+		for(int i=len;i>=1;i--)
+		{
+			now=now*10+num[i];
+			C.num[++C.len]=now/B;
+			now%=B;
+		}
+		D.len=C.len;
+		for(int i=1;i<=C.len;i++)
+			D.num[i]=C.num[C.len-i+1];
+		while(D.num[D.len]==0)D.len--;
+		return D;
+	}	
+};
+
+Num factorial,ans;
+Num one,i,n;
+
+signed main()
+{
+	n.get_num();ans.init();
+	one.len=1;one.num[1]=1;
+	factorial=i=one;
+	for(;i<n||i==n;i=i+one)
+		factorial=factorial*i,ans=ans+factorial;
+	ans.print();
+}
